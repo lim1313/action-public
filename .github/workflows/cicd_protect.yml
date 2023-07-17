@@ -3,32 +3,18 @@ name: CICD
 on:
   push:
     branches:
-      - develop
-      - tmp-*
-  pull_request:
-    branches:
-      - develop
-    types:
-      - labeled
-      - synchronize
+      - main
+      - qa
 
 jobs:
   integration:
-    if: |
-      github.event_name == 'push' ||
-      github.event.label.name == 'action:cd' ||
-      contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
     uses: ./.github/workflows/ci_reusable.yml
     secrets: inherit
 
   deploy_info:
-    if: |
-      github.event_name == 'push' ||
-      github.event.label.name == 'action:cd' ||
-      contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
     name: get deploy info
-    runs-on: ubuntu-latest
     environment: production
+    runs-on: ubuntu-latest
 
     outputs:
       rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
