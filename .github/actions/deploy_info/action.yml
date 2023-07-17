@@ -14,15 +14,7 @@ runs:
   steps:
     - id: get-build-type
       run: |
-        if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
-        then
-          _rap_domain="ye-test.test.test2.ai"
-          _secretSuffix='MAIN'
-        elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
-        then 
-          _rap_domain="qa-ye-test.test.test2.ai"
-          _secretSuffix='QA'
-        elif [[ ${GITHUB_REF#refs/heads/} == "develop" ]]
+        if [[ ${GITHUB_REF#refs/heads/} == "develop" ]]
         then
           _rap_domain="dev-ye-test.test.test2.ai"
           _secretSuffix='DEVELOP'
@@ -36,5 +28,4 @@ runs:
         fi
         echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
         echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
-        echo "${_rap_domain,,}, ${_secretSuffix,,}"
       shell: bash

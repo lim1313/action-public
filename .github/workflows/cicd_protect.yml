@@ -3,30 +3,17 @@ name: CICD
 on:
   push:
     branches:
-      - develop
-      - tmp-*
-  pull_request:
-    branches:
-      - develop
-    types:
-      - labeled
-      - synchronize
+      - main
+      - qa
 
 jobs:
   integration:
-    if: |
-      github.event_name == 'push' ||
-      github.event.label.name == 'action:cd' ||
-      contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
     uses: ./.github/workflows/ci_reusable.yml
     secrets: inherit
 
   deploy_info:
-    if: |
-      github.event_name == 'push' ||
-      github.event.label.name == 'action:cd' ||
-      contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
     name: get deploy info
+    environment: production
     runs-on: ubuntu-latest
 
     outputs:
@@ -37,9 +24,20 @@ jobs:
       - name: Checkout
         id: git_checkout
         uses: actions/checkout@v3
+
       - name: Get Deploy Info
         id: get-deploy-info
-        uses: ./.github/actions/deploy_info
+        run: |
+          if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
+          then
+          _rap_domain="${{ vars.MAIN_URL }}"
+          _secretSuffix='MAIN'
+          elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
+          then 
+          _rap_domain="${{ vars.QA_URL }}"
+          _secretSuffix='QA'
+          echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
+          echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
 
   deploy:
     needs: [integration, deploy_info]
