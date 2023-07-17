@@ -43,6 +43,7 @@ jobs:
           fi
           echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
           echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
+          echo "${_rap_domain,,}, ${_secretSuffix,,}"
 
   deploy:
     needs: [integration, deploy_info]
