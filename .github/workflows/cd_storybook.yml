@@ -1,0 +1,18 @@
+name: deploy-storybook
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - labeled
+
+jobs:
+  deploy:
+    if: github.event.label.name == 'storybook:cd'
+    uses: ./.github/workflows/cd_reusable.yml
+    secrets: inherit
+    with:
+      cdTarget: storybook
+      buildFolder: storybook-static
+      domain: storybook-rap

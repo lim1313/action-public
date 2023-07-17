@@ -1,0 +1,25 @@
+name: CI-reusable
+
+on:
+  workflow_call:
+    outputs:
+      result:
+        description: "testing result"
+        value: ${{ jobs.integration.outputs.test_result == 'fail' && 'fail' || 'success' }}
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
+
+jobs:
+  integration:
+    name: integration
+    runs-on: ubuntu-latest
+
+    outputs:
+      test_result: ${{ steps.test-result.outputs.test_result }}
+
+    steps:
+      # 브랜치 checkout
+      - name: Checkout
+        id: git_checkout
+        uses: actions/checkout@v3

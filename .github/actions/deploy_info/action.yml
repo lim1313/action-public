@@ -1,0 +1,40 @@
+name: Get RAP Deploy info
+description: get domain and secret suffix
+
+outputs:
+  rap_domain:
+    description: "rap_domain type"
+    value: ${{ steps.get-build-type.outputs.rap_domain }}
+  secretSuffix:
+    description: "suffix type"
+    value: ${{ steps.get-build-type.outputs.secretSuffix }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: get-build-type
+      run: |
+        if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
+        then
+          _rap_domain="ye-test.test.test2.ai"
+          _secretSuffix='MAIN'
+        elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
+        then 
+          _rap_domain="qa-ye-test.test.test2.ai"
+          _secretSuffix='QA'
+        elif [[ ${GITHUB_REF#refs/heads/} == "develop" ]]
+        then
+          _rap_domain="dev-ye-test.test.test2.ai"
+          _secretSuffix='DEVELOP'
+        elif [[ ${{ github.event_name }} == 'pull_request' ]]
+        then
+          _rap_domain="feat-ye-test.test.test2.ai"
+          _secretSuffix='DEVELOP'
+        else
+          _rap_domain=$(echo ${GITHUB_REF#refs/heads/} | cut -d'/' -f2 | cut -f2 -d '#')-ye-test.test.test2.ai
+          _secretSuffix='DEVELOP'
+        fi
+        echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
+        echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
+        echo "${_rap_domain,,}, ${_secretSuffix,,}"
+      shell: bash

@@ -1,0 +1,20 @@
+name: Clear Bucket
+
+on:
+  delete:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - closed
+
+jobs:
+  clear:
+    if: contains(github.event.pull_request.labels.*.name, 'action:cd')
+    name: clear
+    runs-on: ubuntu-latest
+
+    steps:
+      # 브랜치 checkout
+      - name: Checkout
+        uses: actions/checkout@v3

@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'action:cd') }}
+    uses: ./.github/workflows/ci_reusable.yml
+    secrets: inherit
