@@ -37,6 +37,10 @@ jobs:
           then 
             _rap_domain="${{ vars.QA_URL }}"
             _secretSuffix='QA'
+          else
+            _rap_domain=$(echo ${GITHUB_REF#refs/heads/} | cut -d'/' -f2 | cut -f2 -d '#')-ye-test.test.test2.ai
+            _secretSuffix='DEVELOP'
+          fi
           echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
           echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
 
