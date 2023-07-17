@@ -28,7 +28,6 @@ jobs:
       contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
     name: get deploy info
     runs-on: ubuntu-latest
-    environment: production
 
     outputs:
       rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
