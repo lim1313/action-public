@@ -21,32 +21,32 @@ jobs:
     uses: ./.github/workflows/ci_reusable.yml
     secrets: inherit
 
-  deploy_info:
-    if: |
-      github.event_name == 'push' ||
-      github.event.label.name == 'action:cd' ||
-      contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
-    name: get deploy info
-    runs-on: ubuntu-latest
+  # deploy_info:
+  #   if: |
+  #     github.event_name == 'push' ||
+  #     github.event.label.name == 'action:cd' ||
+  #     contains(fromJSON('["synchronize"]'), github.event.action) && contains(github.event.pull_request.labels.*.name, 'action:cd')
+  #   name: get deploy info
+  #   runs-on: ubuntu-latest
 
-    outputs:
-      rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
-      secretSuffix: ${{ steps.get-deploy-info.outputs.secretSuffix }}
+  #   outputs:
+  #     rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
+  #     secretSuffix: ${{ steps.get-deploy-info.outputs.secretSuffix }}
 
-    steps:
-      - name: Checkout
-        id: git_checkout
-        uses: actions/checkout@v3
-      - name: Get Deploy Info
-        id: get-deploy-info
-        uses: ./.github/actions/deploy_info
+  #   steps:
+  #     - name: Checkout
+  #       id: git_checkout
+  #       uses: actions/checkout@v3
+  #     - name: Get Deploy Info
+  #       id: get-deploy-info
+  #       uses: ./.github/actions/deploy_info
 
-  deploy:
-    needs: [integration, deploy_info]
-    uses: ./.github/workflows/cd_reusable.yml
-    with:
-      domain: ${{ needs.deploy_info.outputs.rap_domain }}
-      secretSuffix: ${{ needs.deploy_info.outputs.secretSuffix }}
-      cdTarget: rap
-      buildFolder: branch
-    secrets: inherit
+  # deploy:
+  #   needs: [integration, deploy_info]
+  #   uses: ./.github/workflows/cd_reusable.yml
+  #   with:
+  #     domain: ${{ needs.deploy_info.outputs.rap_domain }}
+  #     secretSuffix: ${{ needs.deploy_info.outputs.secretSuffix }}
+  #     cdTarget: rap
+  #     buildFolder: branch
+  #   secrets: inherit

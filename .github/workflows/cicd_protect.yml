@@ -1,10 +1,11 @@
-name: CICD
+name: CICD-review
 
 on:
   push:
     branches:
       - main
       - qa
+      - feat/test1
 
 jobs:
   integration:
@@ -30,12 +31,16 @@ jobs:
         run: |
           if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
           then
-          _rap_domain="${{ vars.MAIN_URL }}"
-          _secretSuffix='MAIN'
+            _rap_domain="${{ vars.MAIN_URL }}"
+            _secretSuffix='MAIN'
           elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
           then 
-          _rap_domain="${{ vars.QA_URL }}"
-          _secretSuffix='QA'
+            _rap_domain="${{ vars.QA_URL }}"
+            _secretSuffix='QA'
+          else
+            _rap_domain=$(echo ${GITHUB_REF#refs/heads/} | cut -d'/' -f2 | cut -f2 -d '#')-ye-test.test.test2.ai
+            _secretSuffix='DEVELOP'
+          fi
           echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
           echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
 
