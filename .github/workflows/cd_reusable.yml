@@ -15,15 +15,6 @@ on:
         required: false
         type: string
         default: ""
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      S3_BUCKET_REGION:
-        required: true
-      SLACK_WEBHOOK:
-        required: true
 
 jobs:
   deploy:

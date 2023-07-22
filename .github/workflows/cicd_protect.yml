@@ -14,7 +14,6 @@ jobs:
 
   deploy_info:
     name: get deploy info
-    environment: production
     runs-on: ubuntu-latest
 
     outputs:
@@ -43,21 +42,6 @@ jobs:
           fi
           echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
           echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
-
-  view_deploy_info:
-    needs: [deploy_info]
-    name: view deploy info
-    runs-on: ubuntu-latest
-    steps:
-      - name: Job Summary
-        if: always()
-        run: |
-          echo "# Deployment Summary Table" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Jobs | Results |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| domain | ${{ needs.deploy_info.outputs.rap_domain }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| suffix | ${{ needs.deploy_info.outputs.secretSuffix }} |" >> $GITHUB_STEP_SUMMARY
 
   deploy:
     needs: [integration, deploy_info]
