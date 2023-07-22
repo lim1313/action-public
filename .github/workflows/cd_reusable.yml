@@ -26,16 +26,16 @@ jobs:
         id: git_checkout
         uses: actions/checkout@v3
 
-      - name: Get Latest Tag
-        id: latest-tag
-        uses: actions-ecosystem/action-get-latest-tag@v1
+      # - name: Get Latest Tag
+      #   id: latest-tag
+      #   uses: actions-ecosystem/action-get-latest-tag@v1
 
       - name: Set Env
         if: always()
         run: |
           git fetch --all --tags
-          git tag -l --sort -v:refname | head -n 1 > describe
-          echo "tag=$(echo `cat describe`)" >> $GITHUB_ENV
+          git tag -l --sort -v:refname > tagD
+          echo "tag=$(echo `cat tagD`)" >> $GITHUB_ENV
       - name: Push tags
         run: |
           echo ${{ env.tag }}
