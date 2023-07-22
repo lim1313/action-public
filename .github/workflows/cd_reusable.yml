@@ -29,9 +29,10 @@ jobs:
       # - name: Get Latest Tag
       #   id: latest-tag
       #   uses: actions-ecosystem/action-get-latest-tag@v1
-      #
+
       - name: Get the latest tag
         run: |
+          git fetch --all --tags
           git describe --tags > tag
           echo `cat tag` | cut -d '.' -f3 > patch
           echo "MAJOR=$(echo `cat tag`)" >> $GITHUB_ENV
