@@ -36,4 +36,6 @@ jobs:
           git fetch --all --tags
           git tag -l --sort -v:refname | head -n 1 > describe
           echo "tag=$(echo `cat describe`)" >> $GITHUB_ENV
+      - name: Push tags
+        run: |
           echo ${{ env.tag }}
