@@ -2,15 +2,6 @@ name: CD-reusable
 on:
   workflow_call:
     inputs:
-      cdTarget:
-        required: true
-        type: string
-      buildFolder:
-        required: true
-        type: string
-      domain:
-        required: true
-        type: string
       secretSuffix:
         required: false
         type: string

@@ -8,47 +8,41 @@ on:
       - feat/test1
 
 jobs:
-  integration:
-    uses: ./.github/workflows/ci_reusable.yml
-    secrets: inherit
+  # integration:
+  #   uses: ./.github/workflows/ci_reusable.yml
+  #   secrets: inherit
 
-  deploy_info:
-    name: get deploy info
-    runs-on: ubuntu-latest
+  # deploy_info:
+  #   name: get deploy info
+  #   runs-on: ubuntu-latest
 
-    outputs:
-      rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
-      secretSuffix: ${{ steps.get-deploy-info.outputs.secretSuffix }}
+  #   outputs:
+  #     rap_domain: ${{ steps.get-deploy-info.outputs.rap_domain }}
+  #     secretSuffix: ${{ steps.get-deploy-info.outputs.secretSuffix }}
 
-    steps:
-      - name: Checkout
-        id: git_checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       id: git_checkout
+  #       uses: actions/checkout@v3
 
-      - name: Get Deploy Info
-        id: get-deploy-info
-        run: |
-          if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
-          then
-            _rap_domain="${{ vars.MAIN_URL }}"
-            _secretSuffix='MAIN'
-          elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
-          then 
-            _rap_domain="${{ vars.QA_URL }}"
-            _secretSuffix='QA'
-          else
-            _rap_domain=$(echo ${GITHUB_REF#refs/heads/} | cut -d'/' -f2 | cut -f2 -d '#')-ye-test.test.test2.ai
-            _secretSuffix='DEVELOP'
-          fi
-          echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
-          echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
+  #     - name: Get Deploy Info
+  #       id: get-deploy-info
+  #       run: |
+  #         if [[ ${GITHUB_REF#refs/heads/} == "main" ]]
+  #         then
+  #           _rap_domain="${{ vars.MAIN_URL }}"
+  #           _secretSuffix='MAIN'
+  #         elif [[ ${GITHUB_REF#refs/heads/} == "qa" ]]
+  #         then
+  #           _rap_domain="${{ vars.QA_URL }}"
+  #           _secretSuffix='QA'
+  #         else
+  #           _rap_domain=$(echo ${GITHUB_REF#refs/heads/} | cut -d'/' -f2 | cut -f2 -d '#')-ye-test.test.test2.ai
+  #           _secretSuffix='DEVELOP'
+  #         fi
+  #         echo "rap_domain=${_rap_domain,,}" >> $GITHUB_OUTPUT
+  #         echo "secretSuffix=${_secretSuffix,,}" >> $GITHUB_OUTPUT
 
   deploy:
-    needs: [integration, deploy_info]
     uses: ./.github/workflows/cd_reusable.yml
-    with:
-      domain: ${{ needs.deploy_info.outputs.rap_domain }}
-      secretSuffix: ${{ needs.deploy_info.outputs.secretSuffix }}
-      cdTarget: rap
-      buildFolder: branch
     secrets: inherit
