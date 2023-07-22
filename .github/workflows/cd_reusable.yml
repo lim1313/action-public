@@ -32,7 +32,7 @@ jobs:
 
       - name: Get the latest tag
         run: |
-          git fetch --all --tags
+          git fetch --prune --unshallow
           git describe --tags > tag
           echo `cat tag` | cut -d '.' -f3 > patch
           echo "MAJOR=$(echo `cat tag`)" >> $GITHUB_ENV
