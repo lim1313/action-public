@@ -32,14 +32,9 @@ jobs:
 
       - name: Get the latest tag
         run: |
-          git fetch --all --tags
           git tag -l --sort -v:refname | head -n 1 > tag
           echo `cat tag` | cut -d '.' -f3 > patch
           echo "MAJOR=$(echo `cat tag`)" >> $GITHUB_ENV
-          echo "MINOR=$(echo `cat tag` | cut -d '.' -f2)" >> $GITHUB_ENV
-          echo "PATCH=$(echo $((`cat patch` + 1)))" >> $GITHUB_ENV
-          echo "USER_NAME=$(echo `git log -n 1 --pretty=format:%an`)" >> $GITHUB_ENV
-          echo "USER_EMAIL=$(echo `git log -n 1 --pretty=format:%ae`)" >> $GITHUB_ENV
 
       # 위의 환경변수를 활용하여 tag를 생성하고 push
       - name: Push tags
