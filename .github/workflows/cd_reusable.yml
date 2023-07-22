@@ -33,4 +33,5 @@ jobs:
       - name: Set Env
         if: always()
         run: |
-          echo git describe
+          echo "tag=$(git describe --tags)" >> $GITHUB_ENV
+          echo ${env.tag}
